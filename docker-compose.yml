@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  mysql:
+  mysql-test:
     image: mysql:8
     restart: always
     environment:
@@ -9,11 +9,12 @@ services:
       MYSQL_DATABASE: test
     ports:
       - "3306:3306"
-  db-test:
-    image: mysql:8
+  mongodb:
+    image: mongo
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: test
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=123654
+      - MONGODB_DATABASE=testORM
     ports:
-      - "3307:3306"
+      - 27017:27017
