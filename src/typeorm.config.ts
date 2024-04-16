@@ -1,7 +1,7 @@
 import { DataSource } from "typeorm";
 import { MongoConnectionOptions } from "typeorm/driver/mongodb/MongoConnectionOptions";
 import { MysqlConnectionOptions } from "typeorm/driver/mysql/MysqlConnectionOptions";
-import * as dotenv from 'dotenv';
+import * as dotenv from "dotenv";
 
 dotenv.config();
 
@@ -14,10 +14,10 @@ const MysqlDataSourceOptions: MysqlConnectionOptions = {
   database: "test",
   synchronize: false,
   migrationsTableName: "migrations_test",
+  migrations: ["dist/migrations/**/*.js"],
   entities: [`dist/**/*.entity.js`],
-  migrations: ['dist/migrations/**/*.js'],
   migrationsRun: false,
-  migrationsTransactionMode: 'each',
+  migrationsTransactionMode: "each",
 };
 
 const MongodbDataSourceOptions: MongoConnectionOptions = {
