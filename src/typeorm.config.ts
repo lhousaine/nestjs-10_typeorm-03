@@ -12,9 +12,12 @@ const MysqlDataSourceOptions: MysqlConnectionOptions = {
   username: "root",
   password: "root",
   database: "test",
-  synchronize: true,
+  synchronize: false,
   migrationsTableName: "migrations_test",
   entities: [`dist/**/*.entity.js`],
+  migrations: ['dist/migrations/**/*.js'],
+  migrationsRun: false,
+  migrationsTransactionMode: 'each',
 };
 
 const MongodbDataSourceOptions: MongoConnectionOptions = {

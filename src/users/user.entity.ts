@@ -17,4 +17,10 @@ export class User {
 
   @OneToMany(type => Photo, photo => photo.user)
   photos: Photo[];
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @Column({ type: 'timestamp', default: null, nullable: true })
+  updatedAt: Date;
 }
