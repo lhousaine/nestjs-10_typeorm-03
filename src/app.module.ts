@@ -3,6 +3,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { UsersModule } from "./users/users.module";
 import { PostsModule } from "./posts/posts.module";
 import { MongodbDataSourceOptions, MysqlDataSourceOptions } from "./typeorm.config";
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { MongodbDataSourceOptions, MysqlDataSourceOptions } from "./typeorm.conf
     TypeOrmModule.forRoot(MongodbDataSourceOptions),
     UsersModule,
     PostsModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

@@ -28,8 +28,8 @@ export class UsersController {
 
   @Get('filter')
   getFilteredUserWithTheirPhotos(
-    @Query('search') search: string,
-  ): Promise<User> {
+    @Query('search') search: string
+  ): Promise<User[]> {
     return this.usersService.getFilteredUserWithTheirPhotos(search);
   }
 

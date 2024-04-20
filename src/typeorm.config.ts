@@ -1,32 +1,32 @@
-import { DataSource } from "typeorm";
-import { MongoConnectionOptions } from "typeorm/driver/mongodb/MongoConnectionOptions";
-import { MysqlConnectionOptions } from "typeorm/driver/mysql/MysqlConnectionOptions";
-import * as dotenv from "dotenv";
+import { DataSource } from 'typeorm';
+import { MongoConnectionOptions } from 'typeorm/driver/mongodb/MongoConnectionOptions';
+import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
+import * as dotenv from 'dotenv';
 
 dotenv.config();
 
 const MysqlDataSourceOptions: MysqlConnectionOptions = {
-  type: "mysql",
-  host: "127.0.0.1",
+  type: 'mysql',
+  host: '127.0.0.1',
   port: 3306,
-  username: "root",
-  password: "root",
-  database: "test",
+  username: 'root',
+  password: 'root',
+  database: 'test',
   synchronize: false,
-  migrationsTableName: "migrations_test",
-  migrations: ["dist/migrations/**/*.js"],
+  migrationsTableName: 'migrations_test',
+  migrations: ['dist/migrations/**/*.js'],
   entities: [`dist/**/*.entity.js`],
   migrationsRun: false,
-  migrationsTransactionMode: "each",
+  migrationsTransactionMode: 'each',
 };
 
 const MongodbDataSourceOptions: MongoConnectionOptions = {
-  type: "mongodb",
-  name: "mongodb",
+  type: 'mongodb',
+  name: 'mongodb',
   url: process.env.MONGODB_URL,
   username: process.env.USER_MONGO_MYDB,
   password: process.env.PASSWORD_MONGO_MYDB,
-  database: "testORM",
+  database: 'testORM',
   synchronize: true,
   useUnifiedTopology: true,
   entities: [`dist/**/*.schema.js`],

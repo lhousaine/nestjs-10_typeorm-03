@@ -12,8 +12,8 @@ export class UserRepository extends Repository<User> {
     return this.createQueryBuilder('user')
       .leftJoinAndSelect('user.photos', 'photo')
       .where(
-        `user.firstName like "%${search}%" OR user.lastName like "%${search}%"`,
+        `user.firstName like "%${search}%" OR user.lastName like "%${search}%"`
       )
-      .getOne();
+      .getMany();
   }
 }
