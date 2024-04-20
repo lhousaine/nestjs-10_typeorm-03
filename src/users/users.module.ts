@@ -14,6 +14,6 @@ import { MysqlDataSourceOptions } from '../typeorm.config';
   imports: [TypeOrmModule.forFeature([User, Photo], MysqlDataSourceOptions)],
   providers: [UsersService, PhotosService, UserRepository, PhotoRepository],
   controllers: [UsersController, PhotoController],
-  exports: [UsersService],
+  exports: [UsersService, UserRepository],
 })
 export class UsersModule {}

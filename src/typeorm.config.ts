@@ -35,6 +35,9 @@ const MongodbDataSourceOptions: MongoConnectionOptions = {
 const MysqlDataSource = new DataSource(MysqlDataSourceOptions);
 const MongodbDataSource = new DataSource(MongodbDataSourceOptions);
 
+MysqlDataSource.initialize();
+MongodbDataSource.initialize();
+
 export {
   MysqlDataSource,
   MongodbDataSource,

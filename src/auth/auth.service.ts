@@ -1,20 +1,75 @@
+import {
+  AuthorizationServer,
+  DateInterval,
+  JwtService as AuthJwtService,
+} from '@jmondi/oauth2-server';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
-import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { Request, Response } from 'express';
+import { AuthCodeRepository } from './repositories/auth-code.repository';
+import { ClientRepository } from './repositories/cleint.repository';
+import { TokenRepository } from './repositories/token.repository';
+import { ScopeRepository } from './repositories/scope.repository';
+import { UserRepository } from '../users/users.repository';
+
+import {
+  handleExpressError,
+  handleExpressResponse,
+  requestFromExpress,
+} from '@jmondi/oauth2-server/express';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
+  private readonly jwt: AuthJwtService;
   constructor(
-    private usersService: UsersService,
+    private readonly userRepository: UserRepository,
     private jwtService: JwtService
-  ) {}
+  ) {
+    this.jwt = new AuthJwtService('JWT_SECRET');
+  }
+
+  getAuthService() {
+    const authorizationServer = new AuthorizationServer(
+      new ClientRepository(),
+      new TokenRepository(),
+      new ScopeRepository(),
+      this.jwt,
+      {}
+    );
+
+    authorizationServer.enableGrantTypes(
+      [
+        {
+          grant: 'authorization_code',
+          authCodeRepository: new AuthCodeRepository(),
+          userRepository: new UserRepository(),
+        },
+        new DateInterval('15m'),
+      ],
+      ['client_credentials', new DateInterval('1d')]
+    );
+    // Supported grant_type
+    authorizationServer.enableGrantType('client_credentials');
+    authorizationServer.enableGrantType({
+      grant: 'authorization_code',
+      authCodeRepository: new AuthCodeRepository(),
+      userRepository: new UserRepository(),
+    });
+    authorizationServer.enableGrantType('refresh_token');
+    authorizationServer.enableGrantType('implicit');
+    authorizationServer.enableGrantType({
+      grant: 'password',
+      userRepository: new UserRepository(),
+    });
+    return authorizationServer;
+  }
 
   async signIn(
     username: string,
     pass: string
   ): Promise<{ access_token: string }> {
-    const user = await this.usersService.findOneByUsername(username);
+    const user = await this.userRepository.findOneBy({ username });
     if (!bcrypt.compare(pass, user?.password)) {
       throw new UnauthorizedException();
     }
@@ -22,5 +77,45 @@ export class AuthService {
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
+  }
+
+  async generateToken(req: Request, res: Response) {
+    try {
+      const oauthResponse =
+        await this.getAuthService().respondToAccessTokenRequest(req);
+      return handleExpressResponse(res, oauthResponse);
+    } catch (e) {
+      handleExpressError(e, res);
+      return;
+    }
+  }
+
+  async authorize(req: Request, res: Response) {
+    const authorizationServer = this.getAuthService();
+    try {
+      const authRequest =
+        await authorizationServer.validateAuthorizationRequest(
+          requestFromExpress(req)
+        );
+
+      authRequest.user = { id: 'abc', email: 'user@example.com' };
+      authRequest.isAuthorizationApproved = true;
+
+      const oauthResponse =
+        await authorizationServer.completeAuthorizationRequest(authRequest);
+      return handleExpressResponse(res, oauthResponse);
+    } catch (e) {
+      handleExpressError(e, res);
+    }
+  }
+
+  async revokeToken(req: Request, res: Response) {
+    try {
+      const oauthResponse = await this.getAuthService().revoke(req);
+      return handleExpressResponse(res, oauthResponse);
+    } catch (e) {
+      handleExpressError(e, res);
+      return;
+    }
   }
 }

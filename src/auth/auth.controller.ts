@@ -1,10 +1,26 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from '../decorators/public.metadata';
+import { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  @HttpCode(HttpStatus.OK)
+  @Public()
+  @Post('token')
+  generateToken(@Req() req: Request, @Res() res: Response) {
+    return this.authService.generateToken(req, res);
+  }
 
   @HttpCode(HttpStatus.OK)
   @Public()
