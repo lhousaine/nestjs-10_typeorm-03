@@ -1,11 +1,9 @@
-import { DataSource } from 'typeorm';
-import { MongoConnectionOptions } from 'typeorm/driver/mongodb/MongoConnectionOptions';
-import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
+import { DataSource, DataSourceOptions } from 'typeorm';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-const MysqlDataSourceOptions: MysqlConnectionOptions = {
+const MysqlDataSourceOptions: DataSourceOptions = {
   type: 'mysql',
   host: '127.0.0.1',
   port: 3306,
@@ -20,15 +18,14 @@ const MysqlDataSourceOptions: MysqlConnectionOptions = {
   migrationsTransactionMode: 'each',
 };
 
-const MongodbDataSourceOptions: MongoConnectionOptions = {
+const MongodbDataSourceOptions: DataSourceOptions = {
   type: 'mongodb',
   name: 'mongodb',
   url: process.env.MONGODB_URL,
   username: process.env.USER_MONGO_MYDB,
   password: process.env.PASSWORD_MONGO_MYDB,
   database: 'testORM',
-  synchronize: true,
-  useUnifiedTopology: true,
+  synchronize: false,
   entities: [`dist/**/*.schema.js`],
 };
 

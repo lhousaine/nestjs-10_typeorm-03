@@ -16,10 +16,10 @@ export class User implements OAuthUser {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ length: 50 })
   firstName: string;
 
-  @Column()
+  @Column({ length: 50 })
   lastName: string;
 
   @Column()
@@ -28,7 +28,7 @@ export class User implements OAuthUser {
   @Column()
   salt: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, length: 60 })
   username: string;
 
   @Column({ default: true })
