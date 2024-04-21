@@ -7,16 +7,17 @@ import {
 import { User } from '../../users/user.entity';
 import { AuthCode } from '../entities/auth_code.entity';
 import { Client } from '../entities/client.entity';
-import { Repository } from 'typeorm';
-import { MysqlDataSource } from '../../typeorm.config';
+import { DataSource, Repository } from 'typeorm';
 import { AuthScope } from '../entities/scope.entity';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class AuthCodeRepository
   extends Repository<AuthCode>
   implements OAuthAuthCodeRepository
 {
-  constructor() {
-    super(AuthCode, MysqlDataSource.createEntityManager());
+  constructor(private dataSource: DataSource) {
+    super(AuthCode, dataSource.createEntityManager());
   }
 
   async getByIdentifier(authCodeCode: string): Promise<AuthCode> {

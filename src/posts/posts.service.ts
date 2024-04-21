@@ -1,14 +1,15 @@
-import { Injectable } from "@nestjs/common";
-import { UpdatePostDto } from "./dto/update-post.dto";
-import { PostSchema } from "./schemas/post.schema";
-import { MongoRepository } from "typeorm";
-import { InjectRepository } from "@nestjs/typeorm";
-import { ObjectId } from "mongodb";
+import { Injectable } from '@nestjs/common';
+import { UpdatePostDto } from './dto/update-post.dto';
+import { PostSchema } from './schemas/post.schema';
+import { MongoRepository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ObjectId } from 'mongodb';
+import { MongodbDataSourceOptions } from 'src/typeorm.config';
 
 @Injectable()
 export class PostsService {
   constructor(
-    @InjectRepository(PostSchema, "mongodb")
+    @InjectRepository(PostSchema, MongodbDataSourceOptions.name)
     private postRepository: MongoRepository<PostSchema>
   ) {}
 
@@ -32,7 +33,7 @@ export class PostsService {
       { $set: updatePostDto },
       {
         upsert: true,
-        returnDocument: "after",
+        returnDocument: 'after',
       }
     );
   }
@@ -57,6 +58,7 @@ export class PostsService {
       .project({
         _id: 0,
         posts: 1,
-      }).toArray();
+      })
+      .toArray();
   }
 }

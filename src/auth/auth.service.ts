@@ -7,7 +7,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import { AuthCodeRepository } from './repositories/auth-code.repository';
-import { ClientRepository } from './repositories/cleint.repository';
+import { ClientRepository } from './repositories/client.repository';
 import { TokenRepository } from './repositories/token.repository';
 import { ScopeRepository } from './repositories/scope.repository';
 import { UserRepository } from '../users/users.repository';
@@ -18,12 +18,18 @@ import {
   requestFromExpress,
 } from '@jmondi/oauth2-server/express';
 import { JwtService } from '@nestjs/jwt';
+import { DataSource } from 'typeorm';
+import { MysqlDataSourceOptions } from 'src/typeorm.config';
 
 @Injectable()
 export class AuthService {
   private readonly jwt: AuthJwtService;
   constructor(
     private readonly userRepository: UserRepository,
+    private readonly clientRepository: ClientRepository,
+    private readonly scopeRepository: ScopeRepository,
+    private readonly tokenRepository: TokenRepository,
+    private readonly authCodeRepository: AuthCodeRepository,
     private jwtService: JwtService
   ) {
     this.jwt = new AuthJwtService('JWT_SECRET');
@@ -31,9 +37,9 @@ export class AuthService {
 
   getAuthService() {
     const authorizationServer = new AuthorizationServer(
-      new ClientRepository(),
-      new TokenRepository(),
-      new ScopeRepository(),
+      this.clientRepository,
+      this.tokenRepository,
+      this.scopeRepository,
       this.jwt,
       {}
     );
@@ -42,8 +48,8 @@ export class AuthService {
       [
         {
           grant: 'authorization_code',
-          authCodeRepository: new AuthCodeRepository(),
-          userRepository: new UserRepository(),
+          authCodeRepository: this.authCodeRepository,
+          userRepository: this.userRepository,
         },
         new DateInterval('15m'),
       ],
@@ -53,14 +59,14 @@ export class AuthService {
     authorizationServer.enableGrantType('client_credentials');
     authorizationServer.enableGrantType({
       grant: 'authorization_code',
-      authCodeRepository: new AuthCodeRepository(),
-      userRepository: new UserRepository(),
+      authCodeRepository: this.authCodeRepository,
+      userRepository: this.userRepository,
     });
     authorizationServer.enableGrantType('refresh_token');
     authorizationServer.enableGrantType('implicit');
     authorizationServer.enableGrantType({
       grant: 'password',
-      userRepository: new UserRepository(),
+      userRepository: this.userRepository,
     });
     return authorizationServer;
   }

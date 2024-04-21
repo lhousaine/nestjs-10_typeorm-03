@@ -12,6 +12,10 @@ import { Token } from './entities/token.entity';
 import { AuthScope } from './entities/scope.entity';
 import { AuthCode } from './entities/auth_code.entity';
 import { User } from '../users/user.entity';
+import { AuthCodeRepository } from './repositories/auth-code.repository';
+import { ClientRepository } from './repositories/client.repository';
+import { ScopeRepository } from './repositories/scope.repository';
+import { TokenRepository } from './repositories/token.repository';
 
 @Module({
   imports: [
@@ -29,6 +33,10 @@ import { User } from '../users/user.entity';
   controllers: [AuthController],
   providers: [
     AuthService,
+    ClientRepository,
+    ScopeRepository,
+    TokenRepository,
+    AuthCodeRepository,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,

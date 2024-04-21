@@ -4,15 +4,16 @@ import {
   OAuthClientRepository,
 } from '@jmondi/oauth2-server';
 import { Client } from '../entities/client.entity';
-import { Repository } from 'typeorm';
-import { MysqlDataSource } from '../../typeorm.config';
+import { DataSource, Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class ClientRepository
   extends Repository<Client>
   implements OAuthClientRepository
 {
-  constructor() {
-    super(Client, MysqlDataSource.createEntityManager());
+  constructor(private dataSource: DataSource) {
+    super(Client, dataSource.createEntityManager());
   }
 
   async getByIdentifier(clientId: string): Promise<Client> {

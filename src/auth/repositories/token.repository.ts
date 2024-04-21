@@ -1,6 +1,5 @@
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Token } from '../entities/token.entity';
-import { MysqlDataSource } from '../../typeorm.config';
 import {
   DateInterval,
   OAuthClient,
@@ -10,13 +9,15 @@ import {
 import { Client } from '../entities/client.entity';
 import { AuthScope } from '../entities/scope.entity';
 import { User } from '../../users/user.entity';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class TokenRepository
   extends Repository<Token>
   implements OAuthTokenRepository
 {
-  constructor() {
-    super(Token, MysqlDataSource.createEntityManager());
+  constructor(private dataSource: DataSource) {
+    super(Token, dataSource.createEntityManager());
   }
 
   findById(accessToken: string): Promise<Token> {

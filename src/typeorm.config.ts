@@ -1,4 +1,4 @@
-import { DataSource, DataSourceOptions } from 'typeorm';
+import { DataSourceOptions } from 'typeorm';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -29,15 +29,4 @@ const MongodbDataSourceOptions: DataSourceOptions = {
   entities: [`dist/**/*.schema.js`],
 };
 
-const MysqlDataSource = new DataSource(MysqlDataSourceOptions);
-const MongodbDataSource = new DataSource(MongodbDataSourceOptions);
-
-MysqlDataSource.initialize();
-MongodbDataSource.initialize();
-
-export {
-  MysqlDataSource,
-  MongodbDataSource,
-  MysqlDataSourceOptions,
-  MongodbDataSourceOptions,
-};
+export { MysqlDataSourceOptions, MongodbDataSourceOptions };

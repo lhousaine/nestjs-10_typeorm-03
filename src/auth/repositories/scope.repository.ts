@@ -1,19 +1,20 @@
-import { MysqlDataSource } from 'src/typeorm.config';
 import { AuthScope } from './../entities/scope.entity';
-import { In, Repository } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import {
   GrantIdentifier,
   OAuthScope,
   OAuthScopeRepository,
 } from '@jmondi/oauth2-server';
 import { Client } from '../entities/client.entity';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class ScopeRepository
   extends Repository<AuthScope>
   implements OAuthScopeRepository
 {
-  constructor() {
-    super(AuthScope, MysqlDataSource.createEntityManager());
+  constructor(private dataSource: DataSource) {
+    super(AuthScope, dataSource.createEntityManager());
   }
 
   async getAllByIdentifiers(scopeNames: string[]): Promise<AuthScope[]> {
