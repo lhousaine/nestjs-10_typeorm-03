@@ -13,7 +13,6 @@ const MysqlDataSourceOptions: DataSourceOptions = {
   synchronize: false,
   migrationsTableName: 'migrations_test',
   migrations: ['dist/migrations/**/*.js'],
-  entities: [`dist/**/*.entity.js`],
   migrationsRun: false,
   migrationsTransactionMode: 'each',
 };

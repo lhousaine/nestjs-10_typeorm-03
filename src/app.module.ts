@@ -10,7 +10,10 @@ import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(MysqlDataSourceOptions),
+    TypeOrmModule.forRoot({
+      ...MysqlDataSourceOptions,
+      autoLoadEntities: true,
+    }),
     TypeOrmModule.forRoot(MongodbDataSourceOptions),
     UsersModule,
     PostsModule,

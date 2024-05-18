@@ -18,8 +18,6 @@ import {
   requestFromExpress,
 } from '@jmondi/oauth2-server/express';
 import { JwtService } from '@nestjs/jwt';
-import { DataSource } from 'typeorm';
-import { MysqlDataSourceOptions } from 'src/typeorm.config';
 
 @Injectable()
 export class AuthService {

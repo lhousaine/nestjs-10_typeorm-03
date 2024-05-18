@@ -6,7 +6,6 @@ import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth.guard';
-import { MysqlDataSourceOptions } from '../typeorm.config';
 import { Client } from './entities/client.entity';
 import { Token } from './entities/token.entity';
 import { AuthScope } from './entities/scope.entity';
@@ -20,10 +19,7 @@ import { TokenRepository } from './repositories/token.repository';
 @Module({
   imports: [
     UsersModule,
-    TypeOrmModule.forFeature(
-      [Client, Token, AuthScope, AuthCode],
-      MysqlDataSourceOptions
-    ),
+    TypeOrmModule.forFeature([Client, Token, AuthScope, AuthCode]),
     JwtModule.register({
       global: true,
       secret: process.env.API_JWT_SECRET,

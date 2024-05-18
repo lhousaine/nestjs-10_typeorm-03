@@ -8,10 +8,9 @@ import { PhotoController } from './photos.controller';
 import { PhotosService } from './photos.service';
 import { UserRepository } from './users.repository';
 import { PhotoRepository } from './photos.repository';
-import { MysqlDataSourceOptions } from '../typeorm.config';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Photo], MysqlDataSourceOptions)],
+  imports: [TypeOrmModule.forFeature([User, Photo])],
   providers: [UsersService, PhotosService, UserRepository, PhotoRepository],
   controllers: [UsersController, PhotoController],
   exports: [UsersService, UserRepository],
